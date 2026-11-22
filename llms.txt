@@ -18,8 +18,8 @@
 - Privacy: no accounts, no ads, no tracking, no backend. Optional sync across
   devices uses the user's personal iCloud.
 - Pricing: free tier (beginner words, four starter topics). Vocablo Plus
-  unlocks all 13 topics, every difficulty, and iCloud sync — $2.99/month or
-  $14.99/year with a one-week free trial.
+  unlocks all 13 topics, every difficulty, and iCloud sync — $4.99/month,
+  $29.99/year with a one-week free trial, or $69.99 lifetime.
 - Developer: Luke Hollenback (solo, independent).
 
 ## Links
