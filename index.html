@@ -400,8 +400,8 @@ footer.site .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:
             <li>iCloud sync across devices</li>
             <li>Cancel anytime</li>
           </ul>
-          <div class="promo" hidden data-code="" data-expires="">
-            <a class="btn" href="https://apps.apple.com/redeem?ctx=offercodes&amp;id=6790215871&amp;code=">🎁 Get offer</a>
+          <div class="promo" data-code="" data-expires="">
+            <a class="btn" href="https://apps.apple.com/app/vocablo-learn-mexican-spanish/id6790215871" data-promo-label="🎁 Get offer">Get Vocablo Plus</a>
           </div>
         </div>
         <div class="price-card featured">
@@ -413,8 +413,8 @@ footer.site .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:
             <li>All 13 topics, every level</li>
             <li>iCloud sync across devices</li>
           </ul>
-          <div class="promo" hidden data-code="2PARANUEVOS" data-expires="2026-12-31">
-            <a class="btn" href="https://apps.apple.com/redeem?ctx=offercodes&amp;id=6790215871&amp;code=">🎁 Get 2 months free</a>
+          <div class="promo" data-code="2PARANUEVOS" data-expires="2026-12-31">
+            <a class="btn" href="https://apps.apple.com/app/vocablo-learn-mexican-spanish/id6790215871" data-promo-label="🎁 Get 2 months free">Get Vocablo Plus</a>
           </div>
         </div>
         <div class="price-card">
@@ -425,8 +425,8 @@ footer.site .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:
             <li>One purchase, no subscription</li>
             <li>Yours on iPhone, iPad &amp; Mac</li>
           </ul>
-          <div class="promo" hidden data-code="CHIDO15" data-expires="2026-12-31">
-            <a class="btn" href="https://apps.apple.com/redeem?ctx=offercodes&amp;id=6790215871&amp;code=">🎁 Unlock for $24.99</a>
+          <div class="promo" data-code="CHIDO15" data-expires="2026-12-31">
+            <a class="btn" href="https://apps.apple.com/app/vocablo-learn-mexican-spanish/id6790215871" data-promo-label="🎁 Unlock for $24.99">Get Vocablo Plus</a>
           </div>
         </div>
       </div>
@@ -493,7 +493,7 @@ footer.site .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:
     if (new Date() >= new Date(expires + 'T23:59:59')) return;
     var link = promo.querySelector('a.btn');
     link.href = 'https://apps.apple.com/redeem?ctx=offercodes&id=6790215871&code=' + encodeURIComponent(code);
-    promo.hidden = false;
+    link.textContent = link.dataset.promoLabel;
   });
 })();
 </script>
