@@ -248,14 +248,16 @@ body.hp-open{overflow:hidden}
 .hp-overlay{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);opacity:0;transition:opacity .25s ease}
 .hp-overlay.show{opacity:1}
 .hp-overlay[hidden]{display:none}
-.hp-modal{position:relative;overflow:hidden;width:100%;max-width:440px;max-height:calc(100vh - 32px);overflow-y:auto;border-radius:24px;padding:44px 28px 28px;text-align:center;color:var(--hp-ink);background:var(--hp-bg);box-shadow:0 24px 70px rgba(0,0,0,.45);transform:translateY(14px) scale(.97);transition:transform .25s ease}
+.hp-modal{position:relative;overflow:hidden;width:100%;max-width:460px;max-height:calc(100vh - 32px);overflow-y:auto;border-radius:24px;padding:44px 28px 28px;text-align:center;color:var(--hp-ink);background:var(--hp-bg);box-shadow:0 24px 70px rgba(0,0,0,.45);transform:translateY(14px) scale(.97);transition:transform .25s ease}
 .hp-overlay.show .hp-modal{transform:none}
 .hp-modal>*:not(.hp-fx){position:relative;z-index:2}
 .hp-fx{position:absolute;top:0;right:0;bottom:0;left:0;z-index:1;overflow:hidden;pointer-events:none}
 .hp-close{position:absolute!important;top:10px;right:10px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(255,255,255,.18);color:inherit;font-size:1.4rem;line-height:1;cursor:pointer;z-index:5!important}
 .hp-close:hover{background:rgba(255,255,255,.3)}
-.hp-eyebrow{font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--hp-accent);margin-bottom:8px}
+.hp-eyebrow{font-size:.78rem;font-weight:700;color:var(--hp-accent);margin-bottom:8px}
 .hp-title{font-size:1.9rem;line-height:1.15;margin-bottom:10px}
+.hp-eyebrow,.hp-title,.hp-text,.hp-price{-webkit-text-wrap:balance;text-wrap:balance}
+.hp-cta{white-space:nowrap}
 .hp-text{color:var(--hp-ink-2);margin-bottom:6px}
 .hp-price{font-size:1.05rem;font-weight:700;margin:14px 0 20px}
 .hp-cta{display:block;background:var(--hp-accent);color:var(--hp-cta-ink);font-weight:700;padding:14px 20px;border-radius:999px;box-shadow:0 8px 22px rgba(0,0,0,.3);transition:transform .15s ease}
@@ -263,14 +265,15 @@ body.hp-open{overflow:hidden}
 .hp-skip{display:inline-block;margin-top:14px;background:none;border:0;color:var(--hp-ink-2);font:inherit;font-size:.9rem;text-decoration:underline;cursor:pointer}
 
 /* default (generic holiday) */
-.hp-modal{--hp-bg:linear-gradient(160deg,#ff2548,#b3122f);--hp-ink:#fff;--hp-ink-2:rgba(255,255,255,.85);--hp-accent:#fff;--hp-cta-ink:#b3122f}
+.hp-modal{--hp-bg:#fff;--hp-ink:#1d1d1f;--hp-ink-2:#4a4a52;--hp-accent:#d3173a;--hp-cta-ink:#fff}
+.hp-theme-generic .hp-close{background:rgba(0,0,0,.08)}.hp-theme-generic .hp-close:hover{background:rgba(0,0,0,.16)}
 /* Black Friday / Cyber Monday */
-.hp-theme-blackfriday{--hp-bg:radial-gradient(circle at 50% 0,#2a2412 0,#0a0a0a 65%);--hp-ink:#fff;--hp-ink-2:#d6d0bd;--hp-accent:#ffc83d;--hp-cta-ink:#111;border:1px solid rgba(255,200,61,.45)}
+.hp-theme-blackfriday{--hp-bg:radial-gradient(circle at 50% 0,#2a2412 0,#0a0a0a 65%);--hp-ink:#fff;--hp-ink-2:#d6d0bd;--hp-accent:#ffc83d;--hp-cta-ink:#111}
 .hp-theme-blackfriday .hp-title{background:linear-gradient(90deg,#ffe28a,#ffc83d,#fff1c0,#ffc83d);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:#ffc83d;animation:hp-shimmer 3s linear infinite}
 /* Christmas */
-.hp-theme-christmas{--hp-bg:linear-gradient(170deg,#0f5b34,#08331d);--hp-ink:#fff;--hp-ink-2:#d9efe1;--hp-accent:#e8132f;--hp-cta-ink:#fff;border:2px solid #e8132f}
+.hp-theme-christmas{--hp-bg:linear-gradient(170deg,#0f5b34,#08331d);--hp-ink:#fff;--hp-ink-2:#d9efe1;--hp-accent:#e8132f;--hp-cta-ink:#fff}
 /* New Year */
-.hp-theme-newyear{--hp-bg:linear-gradient(170deg,#141a4a,#05071c);--hp-ink:#fff;--hp-ink-2:#c9cdf0;--hp-accent:#f6c453;--hp-cta-ink:#1a1a1a;border:1px solid rgba(246,196,83,.5)}
+.hp-theme-newyear{--hp-bg:linear-gradient(170deg,#141a4a,#05071c);--hp-ink:#fff;--hp-ink-2:#c9cdf0;--hp-accent:#f6c453;--hp-cta-ink:#1a1a1a}
 @keyframes hp-shimmer{to{background-position:-200% 0}}
 
 /* snow */
@@ -617,17 +620,17 @@ body.hp-open{overflow:hidden}
   }
 
   var preview = (/[?&]holiday=(\w+)/.exec(location.search) || [])[1];
-  var info = preview ? { theme: preview, name: 'the holidays', key: 'preview' } : pick(new Date());
+  var info = preview ? { theme: preview, name: '', key: 'preview' } : pick(new Date());
   if (!info) return;
 
   var storeKey = 'vocablo-hp-dismissed';
   try { if (!preview && localStorage.getItem(storeKey) === info.key) return; } catch (e) {}
 
   var copy = {
-    blackfriday: ['Black Friday & Cyber Monday', 'Our best deal of the year', 'Learn Mexican Spanish for less with Vocablo Plus Annual.'],
+    blackfriday: ['Black Friday & Cyber Monday', 'Our best deal of the year', 'Save on Vocablo Plus Annual and learn Mexican Spanish for less.'],
     christmas: ['Merry Christmas', 'Give yourself a gift 🎄', 'Unlock every topic and level with Vocablo Plus Annual.'],
-    newyear: ['Happy New Year', 'New year, new language 🎆', 'Make this the year you finally learn Mexican Spanish.'],
-    generic: ['Happy ' + (info.name || 'holiday'), 'Celebrate with Vocablo Plus', 'Unlock every topic and level with Vocablo Plus Annual.']
+    newyear: ['Happy New Year', 'New year, new language 🎆', 'Make this the year you learn Mexican Spanish.'],
+    generic: [!info.name ? 'Happy holidays' : /Memorial|Veterans|Martin/.test(info.name) ? info.name : 'Happy ' + info.name, 'Celebrate with Vocablo Plus', 'Unlock every topic and level with Vocablo Plus Annual.']
   };
   var c = copy[info.theme] || copy.generic;
   if (!copy[info.theme]) info.theme = 'generic';
@@ -645,8 +648,8 @@ body.hp-open{overflow:hidden}
   document.getElementById('hp-title').textContent = c[1];
   document.getElementById('hp-text').textContent = c[2];
   document.getElementById('hp-price').textContent = hasOffer
-    ? 'Special offer — redeem in the App Store'
-    : '$29.99/year · one-week free trial';
+    ? 'Special offer: redeem it in the App Store.'
+    : '$29.99 per year, with a one-week free trial.';
   modal.className = 'hp-modal hp-theme-' + info.theme;
 
   function el(tag, cls, css, text) {
