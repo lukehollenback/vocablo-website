@@ -248,13 +248,11 @@ body.hp-open{overflow:hidden}
 .hp-overlay{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);opacity:0;transition:opacity .25s ease}
 .hp-overlay.show{opacity:1}
 .hp-overlay[hidden]{display:none}
-.hp-modal{position:relative;overflow:hidden;width:100%;max-width:460px;max-height:calc(100vh - 32px);overflow-y:auto;border-radius:24px;padding:44px 28px 28px;text-align:center;color:var(--hp-ink);background:var(--hp-bg);box-shadow:0 24px 70px rgba(0,0,0,.45);transform:translateY(14px) scale(.97);transition:transform .25s ease}
+.hp-modal{position:relative;overflow:hidden;width:100%;max-width:460px;max-height:calc(100vh - 32px);overflow-y:auto;border-radius:24px;padding:32px 28px 28px;text-align:center;color:var(--hp-ink);background:var(--hp-bg);box-shadow:0 24px 70px rgba(0,0,0,.45);transform:translateY(14px) scale(.97);transition:transform .25s ease}
 .hp-overlay.show .hp-modal{transform:none}
 .hp-modal:focus,.hp-modal:focus-visible{outline:none}
 .hp-modal>*:not(.hp-fx){position:relative;z-index:2}
 .hp-fx{position:absolute;top:0;right:0;bottom:0;left:0;z-index:1;overflow:hidden;pointer-events:none}
-.hp-close{position:absolute!important;top:10px;right:10px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(255,255,255,.18);color:inherit;font-size:1.4rem;line-height:1;cursor:pointer;z-index:5!important}
-.hp-close:hover{background:rgba(255,255,255,.3)}
 .hp-eyebrow{font-size:.78rem;font-weight:700;color:var(--hp-accent);margin-bottom:8px}
 .hp-title{font-size:1.9rem;line-height:1.15;margin-bottom:10px}
 .hp-eyebrow,.hp-title,.hp-text,.hp-price{-webkit-text-wrap:balance;text-wrap:balance}
@@ -267,7 +265,6 @@ body.hp-open{overflow:hidden}
 
 /* default (generic holiday) */
 .hp-modal{--hp-bg:#fff;--hp-ink:#1d1d1f;--hp-ink-2:#4a4a52;--hp-accent:#d3173a;--hp-cta-ink:#fff}
-.hp-theme-generic .hp-close{background:rgba(0,0,0,.08)}.hp-theme-generic .hp-close:hover{background:rgba(0,0,0,.16)}
 /* Black Friday / Cyber Monday */
 .hp-theme-blackfriday{--hp-bg:radial-gradient(circle at 50% 0,#2a2412 0,#0a0a0a 65%);--hp-ink:#fff;--hp-ink-2:#d6d0bd;--hp-accent:#ffc83d;--hp-cta-ink:#111}
 .hp-theme-blackfriday .hp-title{background:linear-gradient(90deg,#ffe28a,#ffc83d,#fff1c0,#ffc83d);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:#ffc83d;animation:hp-shimmer 3s linear infinite}
@@ -560,7 +557,6 @@ body.hp-open{overflow:hidden}
 <div class="hp-overlay" id="hp-overlay" hidden>
   <div class="hp-modal" id="hp-modal" role="dialog" aria-modal="true" aria-labelledby="hp-title" tabindex="-1">
     <div class="hp-fx" id="hp-fx" aria-hidden="true"></div>
-    <button type="button" class="hp-close" id="hp-close" aria-label="Close">&times;</button>
     <p class="hp-eyebrow" id="hp-eyebrow"></p>
     <h2 class="hp-title" id="hp-title"></h2>
     <p class="hp-text" id="hp-text"></p>
@@ -679,7 +675,6 @@ body.hp-open{overflow:hidden}
       var segs = [sw, arc, sh, arc, sw, arc, sh, arc];
       var total = 2 * sw + 2 * sh + 4 * arc;
       var n = Math.max(12, Math.round(total / 30));
-      var cb = document.getElementById('hp-close').getBoundingClientRect(), mb = fx.getBoundingClientRect();
       for (var j = 0; j < n; j++) {
         var s = (j + 0.5) * total / n, k = 0;
         while (k < 7 && s > segs[k]) { s -= segs[k]; k++; }
@@ -694,8 +689,6 @@ body.hp-open{overflow:hidden}
           var a0 = { 1: -90, 3: 0, 5: 90, 7: 180 }[k], a = a0 + (s / arc) * 90;
           x = cx + r * Math.cos(a * Math.PI / 180); y = cy + r * Math.sin(a * Math.PI / 180); ang = a;
         }
-        // Leave a gap where the close button sits.
-        if (x > cb.left - mb.left - 8 && x < cb.right - mb.left + 8 && y > cb.top - mb.top - 8 && y < cb.bottom - mb.top + 8) continue;
         var bulb = el('span', 'hp-bulb', 'left:' + x.toFixed(1) + 'px;top:' + y.toFixed(1) + 'px;--c:' + cols[j % 4] +
           ';transform:rotate(' + (ang + 90) + 'deg);animation-delay:' + (-(j % 4) * 0.4) + 's');
         fx.appendChild(bulb); bulbs.push(bulb);
@@ -745,7 +738,6 @@ body.hp-open{overflow:hidden}
   }
   var resizeTimer;
   function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(layoutFx, 100); }
-  document.getElementById('hp-close').addEventListener('click', close);
   document.getElementById('hp-skip').addEventListener('click', close);
   cta.addEventListener('click', function () { try { localStorage.setItem(storeKey, info.key); } catch (e) {} });
   overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
