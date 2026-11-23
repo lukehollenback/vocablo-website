@@ -214,13 +214,17 @@ img.phone{width:100%;max-width:300px;margin-inline:auto}
 .checklist li::before{content:"✓";position:absolute;left:0;color:var(--brand);font-weight:700}
 .checklist li strong{color:var(--ink)}
 
-.pricing{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));max-width:1100px}
-.price-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px;display:flex;flex-direction:column}
+.pricing{display:grid;gap:20px;grid-template-columns:repeat(4,minmax(0,1fr));max-width:1100px}
+@media(max-width:999px){.pricing{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:559px){.pricing{grid-template-columns:1fr}}
+.price-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px 24px;display:flex;flex-direction:column}
 .price-card.featured{position:relative;border-color:var(--brand);box-shadow:0 12px 36px rgba(255,37,72,.16)}
-.price-card .price{font-size:2rem;font-weight:800;margin:6px 0}
+.price-card h3{white-space:nowrap}
+.price-card .price{font-size:2rem;font-weight:800;margin:6px 0;white-space:nowrap}
 .price-card .price span{font-size:.95rem;font-weight:400;color:var(--ink-2)}
 .price-card ul{list-style:none;margin:14px 0 18px}
-.price-card li{color:var(--ink-2);font-size:.93rem;padding:4px 0}
+.price-card li{color:var(--ink-2);font-size:.93rem;padding:4px 0;white-space:nowrap}
+.price-card .promo .btn{white-space:nowrap;padding-left:10px;padding-right:10px}
 .badge{position:absolute;top:0;left:50%;transform:translate(-50%,-50%);white-space:nowrap;background:var(--brand);color:#fff;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:4px 14px;box-shadow:0 6px 16px rgba(255,37,72,.35)}
 
 details{border-bottom:1px solid var(--line);padding:18px 0}
@@ -237,6 +241,57 @@ footer.site .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:
   .btn:hover{transform:none}
   .shot-marquee{overflow-x:auto;-webkit-overflow-scrolling:touch}
   .shot-marquee .track{animation:none}
+}
+
+/* ===== Holiday promo modal ===== */
+body.hp-open{overflow:hidden}
+.hp-overlay{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);opacity:0;transition:opacity .25s ease}
+.hp-overlay.show{opacity:1}
+.hp-overlay[hidden]{display:none}
+.hp-modal{position:relative;overflow:hidden;width:100%;max-width:440px;max-height:calc(100vh - 32px);overflow-y:auto;border-radius:24px;padding:44px 28px 28px;text-align:center;color:var(--hp-ink);background:var(--hp-bg);box-shadow:0 24px 70px rgba(0,0,0,.45);transform:translateY(14px) scale(.97);transition:transform .25s ease}
+.hp-overlay.show .hp-modal{transform:none}
+.hp-modal>*:not(.hp-fx){position:relative;z-index:2}
+.hp-fx{position:absolute;top:0;right:0;bottom:0;left:0;z-index:1;overflow:hidden;pointer-events:none}
+.hp-close{position:absolute!important;top:10px;right:10px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(255,255,255,.18);color:inherit;font-size:1.4rem;line-height:1;cursor:pointer;z-index:5!important}
+.hp-close:hover{background:rgba(255,255,255,.3)}
+.hp-eyebrow{font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--hp-accent);margin-bottom:8px}
+.hp-title{font-size:1.9rem;line-height:1.15;margin-bottom:10px}
+.hp-text{color:var(--hp-ink-2);margin-bottom:6px}
+.hp-price{font-size:1.05rem;font-weight:700;margin:14px 0 20px}
+.hp-cta{display:block;background:var(--hp-accent);color:var(--hp-cta-ink);font-weight:700;padding:14px 20px;border-radius:999px;box-shadow:0 8px 22px rgba(0,0,0,.3);transition:transform .15s ease}
+.hp-cta:hover{transform:translateY(-1px)}
+.hp-skip{display:inline-block;margin-top:14px;background:none;border:0;color:var(--hp-ink-2);font:inherit;font-size:.9rem;text-decoration:underline;cursor:pointer}
+
+/* default (generic holiday) */
+.hp-modal{--hp-bg:linear-gradient(160deg,#ff2548,#b3122f);--hp-ink:#fff;--hp-ink-2:rgba(255,255,255,.85);--hp-accent:#fff;--hp-cta-ink:#b3122f}
+/* Black Friday / Cyber Monday */
+.hp-theme-blackfriday{--hp-bg:radial-gradient(circle at 50% 0,#2a2412 0,#0a0a0a 65%);--hp-ink:#fff;--hp-ink-2:#d6d0bd;--hp-accent:#ffc83d;--hp-cta-ink:#111;border:1px solid rgba(255,200,61,.45)}
+.hp-theme-blackfriday .hp-title{background:linear-gradient(90deg,#ffe28a,#ffc83d,#fff1c0,#ffc83d);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:#ffc83d;animation:hp-shimmer 3s linear infinite}
+/* Christmas */
+.hp-theme-christmas{--hp-bg:linear-gradient(170deg,#0f5b34,#08331d);--hp-ink:#fff;--hp-ink-2:#d9efe1;--hp-accent:#e8132f;--hp-cta-ink:#fff;border:2px solid #e8132f}
+/* New Year */
+.hp-theme-newyear{--hp-bg:linear-gradient(170deg,#141a4a,#05071c);--hp-ink:#fff;--hp-ink-2:#c9cdf0;--hp-accent:#f6c453;--hp-cta-ink:#1a1a1a;border:1px solid rgba(246,196,83,.5)}
+@keyframes hp-shimmer{to{background-position:-200% 0}}
+
+/* snow */
+.hp-flake{position:absolute;top:-24px;color:#fff;opacity:.85;animation:hp-fall linear infinite;will-change:transform}
+@keyframes hp-fall{to{transform:translate3d(var(--hp-drift,20px),460px,0) rotate(360deg)}}
+/* lights */
+.hp-lights{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-around;height:18px}
+.hp-bulb{width:10px;height:14px;border-radius:50% 50% 55% 55%;margin-top:3px;background:var(--c);box-shadow:0 0 10px 3px var(--c);animation:hp-twinkle 1.4s ease-in-out infinite}
+.hp-lights::before{content:"";position:absolute;top:2px;left:0;right:0;height:2px;background:rgba(255,255,255,.25)}
+@keyframes hp-twinkle{0%,100%{opacity:1}50%{opacity:.25}}
+/* fireworks */
+.hp-burst{position:absolute;width:0;height:0}
+.hp-spark{position:absolute;left:0;top:0;width:5px;height:5px;border-radius:50%;background:var(--c);box-shadow:0 0 6px var(--c);opacity:0;animation:hp-spark 1.8s ease-out infinite}
+@keyframes hp-spark{0%{opacity:1;transform:translate(0,0)}80%{opacity:.9}100%{opacity:0;transform:translate(var(--x),var(--y))}}
+/* black friday sparkles */
+.hp-glint{position:absolute;color:#ffc83d;animation:hp-twinkle 2s ease-in-out infinite}
+
+@media (prefers-reduced-motion:reduce){
+  .hp-overlay,.hp-modal,.hp-cta{transition:none}
+  .hp-fx *,.hp-theme-blackfriday .hp-title{animation:none!important}
+  .hp-flake{display:none}
 }
 </style>
 </head>
@@ -381,52 +436,52 @@ footer.site .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:
   <section class="alt" id="pricing">
     <div class="wrap">
       <h2>Simple pricing.</h2>
-      <p class="lead">Start free. Upgrade when you want the full curriculum.</p>
+      <p class="lead">Start free. Upgrade to Vocablo Plus when you want the full curriculum.</p>
       <div class="pricing">
         <div class="price-card">
           <h3>Free</h3>
           <p class="price">$0</p>
           <ul>
-            <li>Four beginner starter topics</li>
-            <li>Widgets on iPhone, iPad &amp; Mac</li>
+            <li>4 beginner topics</li>
+            <li>Widgets on every device</li>
             <li>Practice games &amp; streaks</li>
           </ul>
         </div>
         <div class="price-card">
-          <h3>Vocablo Plus Monthly</h3>
+          <h3>Monthly</h3>
           <p class="price">$4.99<span>/month</span></p>
           <ul>
             <li>All 13 topics, every level</li>
-            <li>iCloud sync across devices</li>
+            <li>iCloud sync</li>
             <li>Cancel anytime</li>
           </ul>
           <div class="promo" data-code="" data-expires="">
-            <a class="btn" href="https://apps.apple.com/app/vocablo-learn-mexican-spanish/id6790215871" data-promo-label="🎁 Get offer">Get Vocablo Plus</a>
+            <a class="btn" href="https://apps.apple.com/app/vocablo-learn-mexican-spanish/id6790215871" data-promo-label="🎁 Get offer">Get Plus</a>
           </div>
         </div>
         <div class="price-card featured">
           <span class="badge">Most popular</span>
-          <h3>Vocablo Plus Annual</h3>
+          <h3>Annual</h3>
           <p class="price">$29.99<span>/year</span></p>
           <ul>
             <li>One-week free trial</li>
             <li>All 13 topics, every level</li>
-            <li>iCloud sync across devices</li>
+            <li>iCloud sync</li>
           </ul>
           <div class="promo" data-code="2PARANUEVOS" data-expires="2026-12-31">
-            <a class="btn" href="https://apps.apple.com/app/vocablo-learn-mexican-spanish/id6790215871" data-promo-label="🎁 Get 2 months free">Get Vocablo Plus</a>
+            <a class="btn" href="https://apps.apple.com/app/vocablo-learn-mexican-spanish/id6790215871" data-promo-label="🎁 2 months free">Get Plus</a>
           </div>
         </div>
         <div class="price-card">
-          <h3>Vocablo Plus Lifetime</h3>
+          <h3>Lifetime</h3>
           <p class="price">$69.99<span> once</span></p>
           <ul>
-            <li>Everything in Plus, forever</li>
-            <li>One purchase, no subscription</li>
-            <li>Yours on iPhone, iPad &amp; Mac</li>
+            <li>Everything in Plus</li>
+            <li>Pay once, no subscription</li>
+            <li>iPhone, iPad &amp; Mac</li>
           </ul>
           <div class="promo" data-code="CHIDO15" data-expires="2026-12-31">
-            <a class="btn" href="https://apps.apple.com/app/vocablo-learn-mexican-spanish/id6790215871" data-promo-label="🎁 Unlock for $24.99">Get Vocablo Plus</a>
+            <a class="btn" href="https://apps.apple.com/app/vocablo-learn-mexican-spanish/id6790215871" data-promo-label="🎁 Unlock for $24.99">Get Plus</a>
           </div>
         </div>
       </div>
@@ -495,6 +550,168 @@ footer.site .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:
     link.href = 'https://apps.apple.com/redeem?ctx=offercodes&id=6790215871&code=' + encodeURIComponent(code);
     link.textContent = link.dataset.promoLabel;
   });
+})();
+</script>
+
+<div class="hp-overlay" id="hp-overlay" hidden>
+  <div class="hp-modal" id="hp-modal" role="dialog" aria-modal="true" aria-labelledby="hp-title" tabindex="-1">
+    <div class="hp-fx" id="hp-fx" aria-hidden="true"></div>
+    <button type="button" class="hp-close" id="hp-close" aria-label="Close">&times;</button>
+    <p class="hp-eyebrow" id="hp-eyebrow"></p>
+    <h2 class="hp-title" id="hp-title"></h2>
+    <p class="hp-text" id="hp-text"></p>
+    <p class="hp-price" id="hp-price"></p>
+    <a class="hp-cta" id="hp-cta" href="#"></a>
+    <button type="button" class="hp-skip" id="hp-skip">Maybe later</button>
+  </div>
+</div>
+
+<script>
+/* Holiday promotion modal.
+   - Nov 1 – Jan 15: always themed (Nov = Black Friday/Cyber Monday, Dec = Christmas, Jan = New Year).
+   - Otherwise: shown within HP_BEFORE/HP_AFTER days of a major US holiday, generic theme.
+   - Offers the annual card's active offer code if there is one, else the normal annual link.
+   - Preview any theme: ?holiday=blackfriday | christmas | newyear | generic  (ignores dismissal) */
+(function () {
+  var HP_BEFORE = 3, HP_AFTER = 3;
+  var DAY = 86400000;
+
+  function nthWeekday(y, m, wd, n) { // n>0: nth; n<0: last
+    if (n > 0) {
+      var first = new Date(y, m, 1).getDay();
+      return new Date(y, m, 1 + ((wd - first + 7) % 7) + (n - 1) * 7);
+    }
+    var last = new Date(y, m + 1, 0);
+    return new Date(y, m, last.getDate() - ((last.getDay() - wd + 7) % 7));
+  }
+  function holidays(y) {
+    return [
+      ["New Year's Day", new Date(y, 0, 1)],
+      ["Martin Luther King Jr. Day", nthWeekday(y, 0, 1, 3)],
+      ["Presidents' Day", nthWeekday(y, 1, 1, 3)],
+      ["Memorial Day", nthWeekday(y, 4, 1, -1)],
+      ["Juneteenth", new Date(y, 5, 19)],
+      ["Independence Day", new Date(y, 6, 4)],
+      ["Labor Day", nthWeekday(y, 8, 1, 1)],
+      ["Columbus Day", nthWeekday(y, 9, 1, 2)],
+      ["Veterans Day", new Date(y, 10, 11)],
+      ["Thanksgiving", nthWeekday(y, 10, 4, 4)],
+      ["Christmas", new Date(y, 11, 25)]
+    ];
+  }
+
+  function pick(now) {
+    var m = now.getMonth(), d = now.getDate();
+    if (m === 10) return { theme: 'blackfriday', key: 'bf-' + now.getFullYear() };
+    if (m === 11) return { theme: 'christmas', key: 'xmas-' + now.getFullYear() };
+    if (m === 0 && d <= 15) return { theme: 'newyear', key: 'ny-' + now.getFullYear() };
+    var today = new Date(now.getFullYear(), m, d).getTime();
+    var list = holidays(now.getFullYear());
+    for (var i = 0; i < list.length; i++) {
+      var t = list[i][1].getTime();
+      if (today >= t - HP_BEFORE * DAY && today <= t + HP_AFTER * DAY) {
+        return { theme: 'generic', name: list[i][0], key: list[i][0] + '-' + now.getFullYear() };
+      }
+    }
+    return null;
+  }
+
+  var preview = (/[?&]holiday=(\w+)/.exec(location.search) || [])[1];
+  var info = preview ? { theme: preview, name: 'the holidays', key: 'preview' } : pick(new Date());
+  if (!info) return;
+
+  var storeKey = 'vocablo-hp-dismissed';
+  try { if (!preview && localStorage.getItem(storeKey) === info.key) return; } catch (e) {}
+
+  var copy = {
+    blackfriday: ['Black Friday & Cyber Monday', 'Our best deal of the year', 'Learn Mexican Spanish for less with Vocablo Plus Annual.'],
+    christmas: ['Merry Christmas', 'Give yourself a gift 🎄', 'Unlock every topic and level with Vocablo Plus Annual.'],
+    newyear: ['Happy New Year', 'New year, new language 🎆', 'Make this the year you finally learn Mexican Spanish.'],
+    generic: ['Happy ' + (info.name || 'holiday'), 'Celebrate with Vocablo Plus', 'Unlock every topic and level with Vocablo Plus Annual.']
+  };
+  var c = copy[info.theme] || copy.generic;
+  if (!copy[info.theme]) info.theme = 'generic';
+
+  // Best annual offer = whatever the Annual card is currently showing (offer code if active).
+  var annualLink = document.querySelector('.price-card.featured .promo a.btn');
+  var overlay = document.getElementById('hp-overlay'),
+      modal = document.getElementById('hp-modal'),
+      fx = document.getElementById('hp-fx'),
+      cta = document.getElementById('hp-cta');
+  var hasOffer = annualLink && /redeem/.test(annualLink.href);
+  cta.href = annualLink ? annualLink.href : 'https://apps.apple.com/app/vocablo-learn-mexican-spanish/id6790215871';
+  cta.textContent = hasOffer ? annualLink.textContent : 'Get Annual Plus';
+  document.getElementById('hp-eyebrow').textContent = c[0];
+  document.getElementById('hp-title').textContent = c[1];
+  document.getElementById('hp-text').textContent = c[2];
+  document.getElementById('hp-price').textContent = hasOffer
+    ? 'Special offer — redeem in the App Store'
+    : '$29.99/year · one-week free trial';
+  modal.className = 'hp-modal hp-theme-' + info.theme;
+
+  function el(tag, cls, css, text) {
+    var n = document.createElement(tag);
+    n.className = cls; n.setAttribute('style', css);
+    if (text) n.textContent = text;
+    return n;
+  }
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+
+  if (info.theme === 'christmas') {
+    for (var i = 0; i < 18; i++) {
+      fx.appendChild(el('span', 'hp-flake', 'left:' + rnd(0, 100) + '%;font-size:' + rnd(10, 22) + 'px;animation-duration:' + rnd(5, 10) + 's;animation-delay:-' + rnd(0, 10) + 's;--hp-drift:' + rnd(-30, 30) + 'px', '❄'));
+    }
+    var lights = el('div', 'hp-lights', '');
+    var cols = ['#ff3b3b', '#ffd84d', '#4dd16f', '#4da6ff'];
+    for (var j = 0; j < 12; j++) {
+      lights.appendChild(el('span', 'hp-bulb', '--c:' + cols[j % 4] + ';animation-delay:' + (j % 2 ? '.7s' : '0s')));
+    }
+    fx.appendChild(lights);
+  } else if (info.theme === 'newyear') {
+    var fc = ['#f6c453', '#ff5570', '#6ec6ff', '#ffffff', '#9cff8a'];
+    for (var b = 0; b < 4; b++) {
+      var burst = el('div', 'hp-burst', 'left:' + rnd(15, 85) + '%;top:' + rnd(12, 60) + '%');
+      for (var k = 0; k < 14; k++) {
+        var a = (k / 14) * Math.PI * 2, r = rnd(45, 70);
+        burst.appendChild(el('i', 'hp-spark', '--c:' + fc[b % fc.length] + ';--x:' + Math.cos(a) * r + 'px;--y:' + Math.sin(a) * r + 'px;animation-delay:' + (b * 0.45) + 's'));
+      }
+      fx.appendChild(burst);
+    }
+  } else if (info.theme === 'blackfriday') {
+    for (var g = 0; g < 8; g++) {
+      fx.appendChild(el('span', 'hp-glint', 'left:' + rnd(5, 92) + '%;top:' + rnd(5, 90) + '%;font-size:' + rnd(10, 18) + 'px;animation-delay:' + rnd(0, 2) + 's', '✦'));
+    }
+  }
+
+  var lastFocus = null;
+  function close() {
+    overlay.classList.remove('show');
+    document.body.classList.remove('hp-open');
+    document.removeEventListener('keydown', onKey);
+    try { localStorage.setItem(storeKey, info.key); } catch (e) {}
+    setTimeout(function () { overlay.hidden = true; }, 250);
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  function onKey(e) {
+    if (e.key === 'Escape') { close(); return; }
+    if (e.key !== 'Tab') return;
+    var f = modal.querySelectorAll('a[href],button');
+    var first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+  function open() {
+    lastFocus = document.activeElement;
+    overlay.hidden = false;
+    document.body.classList.add('hp-open');
+    document.addEventListener('keydown', onKey);
+    setTimeout(function () { overlay.classList.add('show'); modal.focus(); }, 20);
+  }
+  document.getElementById('hp-close').addEventListener('click', close);
+  document.getElementById('hp-skip').addEventListener('click', close);
+  cta.addEventListener('click', function () { try { localStorage.setItem(storeKey, info.key); } catch (e) {} });
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+  setTimeout(open, 1200);
 })();
 </script>
 
