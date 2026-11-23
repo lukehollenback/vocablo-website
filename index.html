@@ -273,6 +273,7 @@ body.hp-open{overflow:hidden}
 .hp-theme-blackfriday .hp-title{background:linear-gradient(90deg,#ffe28a,#ffc83d,#fff1c0,#ffc83d);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:#ffc83d;animation:hp-shimmer 3s linear infinite}
 /* Christmas */
 .hp-theme-christmas{--hp-bg:linear-gradient(170deg,#0f5b34,#08331d);--hp-ink:#fff;--hp-ink-2:#d9efe1;--hp-accent:#e8132f;--hp-cta-ink:#fff}
+.hp-theme-christmas .hp-eyebrow{color:#ffd84d}
 /* New Year */
 .hp-theme-newyear{--hp-bg:linear-gradient(170deg,#141a4a,#05071c);--hp-ink:#fff;--hp-ink-2:#c9cdf0;--hp-accent:#f6c453;--hp-cta-ink:#1a1a1a}
 @keyframes hp-shimmer{to{background-position:-200% 0}}
@@ -280,10 +281,9 @@ body.hp-open{overflow:hidden}
 /* snow */
 .hp-flake{position:absolute;top:-24px;color:#fff;opacity:.85;animation:hp-fall linear infinite;will-change:transform}
 @keyframes hp-fall{to{transform:translate3d(var(--hp-drift,20px),460px,0) rotate(360deg)}}
-/* lights */
-.hp-lights{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-around;height:18px}
-.hp-bulb{width:10px;height:14px;border-radius:50% 50% 55% 55%;margin-top:3px;background:var(--c);box-shadow:0 0 10px 3px var(--c);animation:hp-twinkle 1.4s ease-in-out infinite}
-.hp-lights::before{content:"";position:absolute;top:2px;left:0;right:0;height:2px;background:rgba(255,255,255,.25)}
+/* lights: bulbs only (no wire), placed around the whole modal edge by script */
+.hp-theme-christmas{padding-left:34px;padding-right:34px}
+.hp-bulb{position:absolute;width:8px;height:12px;margin:-6px 0 0 -4px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:var(--c);box-shadow:0 0 6px 2px var(--c),0 0 14px 4px var(--c);animation:hp-twinkle 1.6s ease-in-out infinite}
 @keyframes hp-twinkle{0%,100%{opacity:1}50%{opacity:.25}}
 /* fireworks */
 .hp-burst{position:absolute;width:0;height:0}
@@ -660,17 +660,47 @@ body.hp-open{overflow:hidden}
     return n;
   }
   function rnd(a, b) { return a + Math.random() * (b - a); }
+  var layoutFx = null; // set by themes whose effects depend on the modal's size
 
   if (info.theme === 'christmas') {
     for (var i = 0; i < 18; i++) {
       fx.appendChild(el('span', 'hp-flake', 'left:' + rnd(0, 100) + '%;font-size:' + rnd(10, 22) + 'px;animation-duration:' + rnd(5, 10) + 's;animation-delay:-' + rnd(0, 10) + 's;--hp-drift:' + rnd(-30, 30) + 'px', '❄'));
     }
-    var lights = el('div', 'hp-lights', '');
+    // Bulbs (no wire) evenly spaced along a rounded rectangle just inside the modal edge.
     var cols = ['#ff3b3b', '#ffd84d', '#4dd16f', '#4da6ff'];
-    for (var j = 0; j < 12; j++) {
-      lights.appendChild(el('span', 'hp-bulb', '--c:' + cols[j % 4] + ';animation-delay:' + (j % 2 ? '.7s' : '0s')));
-    }
-    fx.appendChild(lights);
+    var bulbs = [];
+    layoutFx = function () {
+      for (var q = 0; q < bulbs.length; q++) fx.removeChild(bulbs[q]);
+      bulbs = [];
+      var w = fx.clientWidth, h = fx.clientHeight;
+      if (!w || !h) return;
+      var inset = 11, r = 13;                       // modal corner radius is 24px
+      var sw = w - 2 * inset - 2 * r, sh = h - 2 * inset - 2 * r, arc = Math.PI * r / 2;
+      var segs = [sw, arc, sh, arc, sw, arc, sh, arc];
+      var total = 2 * sw + 2 * sh + 4 * arc;
+      var n = Math.max(12, Math.round(total / 30));
+      var cb = document.getElementById('hp-close').getBoundingClientRect(), mb = fx.getBoundingClientRect();
+      for (var j = 0; j < n; j++) {
+        var s = (j + 0.5) * total / n, k = 0;
+        while (k < 7 && s > segs[k]) { s -= segs[k]; k++; }
+        var x, y, ang;                              // ang = outward normal, in degrees
+        var L = inset, T = inset, R = w - inset, B = h - inset;
+        if (k === 0) { x = L + r + s; y = T; ang = -90; }
+        else if (k === 2) { x = R; y = T + r + s; ang = 0; }
+        else if (k === 4) { x = R - r - s; y = B; ang = 90; }
+        else if (k === 6) { x = L; y = B - r - s; ang = 180; }
+        else {
+          var cx = k === 1 || k === 3 ? R - r : L + r, cy = k === 3 || k === 5 ? B - r : T + r;
+          var a0 = { 1: -90, 3: 0, 5: 90, 7: 180 }[k], a = a0 + (s / arc) * 90;
+          x = cx + r * Math.cos(a * Math.PI / 180); y = cy + r * Math.sin(a * Math.PI / 180); ang = a;
+        }
+        // Leave a gap where the close button sits.
+        if (x > cb.left - mb.left - 8 && x < cb.right - mb.left + 8 && y > cb.top - mb.top - 8 && y < cb.bottom - mb.top + 8) continue;
+        var bulb = el('span', 'hp-bulb', 'left:' + x.toFixed(1) + 'px;top:' + y.toFixed(1) + 'px;--c:' + cols[j % 4] +
+          ';transform:rotate(' + (ang + 90) + 'deg);animation-delay:' + (-(j % 4) * 0.4) + 's');
+        fx.appendChild(bulb); bulbs.push(bulb);
+      }
+    };
   } else if (info.theme === 'newyear') {
     var fc = ['#f6c453', '#ff5570', '#6ec6ff', '#ffffff', '#9cff8a'];
     for (var b = 0; b < 4; b++) {
@@ -692,6 +722,7 @@ body.hp-open{overflow:hidden}
     overlay.classList.remove('show');
     document.body.classList.remove('hp-open');
     document.removeEventListener('keydown', onKey);
+    window.removeEventListener('resize', onResize);
     try { localStorage.setItem(storeKey, info.key); } catch (e) {}
     setTimeout(function () { overlay.hidden = true; }, 250);
     if (lastFocus && lastFocus.focus) lastFocus.focus();
@@ -709,8 +740,11 @@ body.hp-open{overflow:hidden}
     overlay.hidden = false;
     document.body.classList.add('hp-open');
     document.addEventListener('keydown', onKey);
+    if (layoutFx) { layoutFx(); window.addEventListener('resize', onResize); }
     setTimeout(function () { overlay.classList.add('show'); modal.focus(); }, 20);
   }
+  var resizeTimer;
+  function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(layoutFx, 100); }
   document.getElementById('hp-close').addEventListener('click', close);
   document.getElementById('hp-skip').addEventListener('click', close);
   cta.addEventListener('click', function () { try { localStorage.setItem(storeKey, info.key); } catch (e) {} });
